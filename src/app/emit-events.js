@@ -22,7 +22,7 @@ const createEmitterScript = (directory, hook) => {
 		'#!/usr/bin/env node',
 		'',
 		`[ -f ${ pipePath } ] || mkfifo ${ pipePath }`,
-		`console.log(${ hook })`
+		`console.log('${ hook }')`
 	].join('\n')
 
 }
