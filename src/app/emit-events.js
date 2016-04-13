@@ -14,12 +14,14 @@ const utils     = require('../commons/utils')
 
 
 
-const createEmitterScript = hook => {
+const createEmitterScript = (directory, hook) => {
+
+	const pipePath = path.join(directory, constants.files.pipeName)
 
 	return [
 		'#!/usr/bin/env node',
 		'',
-		`[ -f ${ constants.files.pipeName } ] || mkfifo ${ constants.files.pipeName }`,
+		`[ -f ${ pipePath } ] || mkfifo ${ pipePath }`,
 		`console.log(${ hook })`
 	].join('\n')
 
@@ -37,7 +39,7 @@ const emitEvents = directory => {
 		const hookScript = path.join(hooksDirectory, `${hook}.js`)
 
 		return new Promise((resolve, reject) => {
-			utils.fs.createFile(hookScript, createEmitterScript(hook), {mode: constants.modes.defaultWithExecutable}, err => {
+			utils.fs.createFile(hookScript, createEmitterScript(hooksDirectory, hook), {mode: constants.modes.defaultWithExecutable}, err => {
 				err ? reject(err) : resolve( )
 			})
 		})
