@@ -23,7 +23,8 @@ const createEmitterScript = (directory, hook) => {
 		'',
 		`[ -p "${ pipePath }" ] || mkfifo "${ pipePath }"`,
 		'',
-		`echo "${ hook }" > { pipePath }`
+		`echo "${ hook }" > ${ pipePath }`,
+		'exit 0'
 	].join('\n')
 
 }
