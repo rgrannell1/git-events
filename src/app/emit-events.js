@@ -19,12 +19,14 @@ const createEmitterScript = (directory, hook) => {
 	const pipePath = path.join(directory, constants.files.pipeName)
 
 	return [
+
 		'#!/usr/bin/env sh',
 		'',
 		`[ -p "${ pipePath }" ] || mkfifo "${ pipePath }"`,
 		'',
 		`echo "${ hook }" > ${ pipePath }`,
 		'exit 0'
+
 	].join('\n')
 
 }
@@ -47,6 +49,7 @@ const emitEvents = directory => {
 		})
 
 	})
+
 
 	Promise.all(createDirectories).then(
 		( ) => {
