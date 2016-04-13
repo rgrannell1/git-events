@@ -5,17 +5,19 @@
 
 
 
-const path      = require('path')
+const fs         = require('fs')
+const path       = require('path')
 
-const constants = require('../commons/constants')
+const constants  = require('../commons/constants')
+const emitEvents = require('../app/emit-events')
 
 
 
 
 
-const emitEvents = rawArgs => {
+const gitEvents = rawArgs => {
 
-	const args = emitEvents.validate(emitEvents.preprocess(rawArgs))
+	const args = gitEvents.validate(gitEvents.preprocess(rawArgs))
 
 	if (args.version) {
 
@@ -24,28 +26,43 @@ const emitEvents = rawArgs => {
 
 	}
 
+	emitEvents(args.directory)
+
 }
 
-emitEvents.validate = args => {
+gitEvents.validate = args => {
 	return args
 }
 
-emitEvents.preprocess = rawArgs => {
+gitEvents.preprocess = rawArgs => {
 
 	const args = {
 		version:   rawArgs['--version']
 	}
 
-	if (args.directory) {
-		args.directory = path.resolve(rawArgs['--directory'])
+	if (rawArgs['--directory']) {
+		try {
+
+			const directory = path.resolve(rawArgs['--directory'])
+			const stats     = fs.lstatSync(directory)
+
+			if (!stats.isDirectory( )) {
+				throw Error('not a directory.')
+			}
+
+			args.directory  = directory
+
+		} catch (err) {
+			console.error(`error: failed to validate '--directory' argument ${rawArgs['--directory']}: ${err.message}`)
+			process.exit(1)
+		}
 	}
 
 	return args
-
 
 }
 
 
 
 
-module.exports = emitEvents
+module.exports = gitEvents
