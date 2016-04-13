@@ -21,7 +21,7 @@ const gitEvents = rawArgs => {
 
 	if (args.version) {
 
-		console.log(constants.package.version)
+		console.log(constants.packageJson.version)
 		process.exit(1)
 
 	}
@@ -37,7 +37,7 @@ gitEvents.validate = args => {
 gitEvents.preprocess = rawArgs => {
 
 	const args = {
-		version:   rawArgs['--version']
+		version: rawArgs['--version']
 	}
 
 	if (rawArgs['--directory']) {
@@ -53,8 +53,18 @@ gitEvents.preprocess = rawArgs => {
 			args.directory  = directory
 
 		} catch (err) {
-			console.error(`error: failed to validate '--directory' argument ${rawArgs['--directory']}: ${err.message}`)
+
+			var message = ''
+
+			if (err.code === constants.errCodes.notFound) {
+				message = 'folder not found.'
+			} else {
+				message = err.message
+			}
+
+			console.error(`error: failed to validate '--directory' argument ${rawArgs['--directory']}: ${message}`)
 			process.exit(1)
+
 		}
 	}
 

@@ -24,7 +24,10 @@ var constants = {
 		'prepare-commit-msg',
 		'update'
 	],
-	package: require('../../package')
+	errCodes: {
+		notFound: 'ENOENT'
+	},
+	packageJson: require('../../package')
 }
 
 
