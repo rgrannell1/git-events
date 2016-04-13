@@ -24,6 +24,9 @@ var constants = {
 		'update'
 
 	],
+	files: {
+		pipeName: 'git-events'
+	},
 	errCodes: {
 		notFound:      'ENOENT',
 		alreadyExists: 'EEXIST'

@@ -18,7 +18,9 @@ const createEmitterScript = hook => {
 
 	return [
 		'#!/usr/bin/env node',
-		'console.log(hook)'
+		'',
+		`[ -f ${ constants.files.pipeName } ] || mkfifo ${ constants.files.pipeName }`,
+		`console.log(${ hook })`
 	].join('\n')
 
 }
