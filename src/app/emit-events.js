@@ -21,9 +21,9 @@ const createEmitterScript = (directory, hook) => {
 	return [
 		'#!/usr/bin/env sh',
 		'',
-		`[ -f ${ pipePath } ] || mkfifo ${ pipePath }`,
+		`[ -p "${ pipePath }" ] || mkfifo "${ pipePath }"`,
 		'',
-		`echo '${ hook }') > { pipePath }`
+		`echo "${ hook }" > { pipePath }`
 	].join('\n')
 
 }
