@@ -6,28 +6,32 @@
 
 var constants = {
 	hooks: [
+
 		'applypatch-msg',
 		'commit-msg',
 		'post-applypatch',
 		'post-checkout',
 		'post-commit',
 		'post-merge',
-		'post-receive',
 		'post-rewrite',
 		'post-update',
 		'pre-applypatch',
 		'pre-auto-gc',
 		'pre-commit',
-		'pre-push',
 		'pre-rebase',
 		'pre-receive',
 		'prepare-commit-msg',
 		'update'
+
 	],
 	errCodes: {
-		notFound: 'ENOENT'
+		notFound:      'ENOENT',
+		alreadyExists: 'EEXIST'
 	},
-	packageJson: require('../../package')
+	packageJson: require('../../package'),
+	modes: {
+		defaultWithExecutable: '775'
+	}
 }
 
 
