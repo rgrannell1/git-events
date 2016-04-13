@@ -19,10 +19,11 @@ const createEmitterScript = (directory, hook) => {
 	const pipePath = path.join(directory, constants.files.pipeName)
 
 	return [
-		'#!/usr/bin/env node',
+		'#!/usr/bin/env sh',
 		'',
 		`[ -f ${ pipePath } ] || mkfifo ${ pipePath }`,
-		`console.log('${ hook }')`
+		'',
+		`echo '${ hook }') > { pipePath }`
 	].join('\n')
 
 }
@@ -36,7 +37,7 @@ const emitEvents = directory => {
 	const hooksDirectory    = path.join(directory, '.git', 'hooks')
 	const createDirectories = constants.hooks.map(hook => {
 
-		const hookScript = path.join(hooksDirectory, `${hook}.js`)
+		const hookScript = path.join(hooksDirectory, `${hook}.sh`)
 
 		return new Promise((resolve, reject) => {
 			utils.fs.createFile(hookScript, createEmitterScript(hooksDirectory, hook), {mode: constants.modes.defaultWithExecutable}, err => {
