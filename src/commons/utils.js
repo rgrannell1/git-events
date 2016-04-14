@@ -2,7 +2,8 @@
 "use strict"
 
 
-const fs        = require('fs')
+const fs       = require('fs')
+const errCodes = require('err-codes')
 
 const constants = require('../commons/constants')
 
@@ -23,7 +24,8 @@ utils.fs.mkdirp = (path, callback) => {
 
 	fs.mkdir(path, err => {
 
-		err.code !== constants.errCodes.alreadyExists
+
+		err.code !== errCodes.aliases.fileExists.code
 			? callback(err)
 			: callback(null)
 

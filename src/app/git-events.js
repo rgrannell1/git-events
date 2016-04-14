@@ -10,6 +10,7 @@ const path       = require('path')
 
 const constants  = require('../commons/constants')
 const emitEvents = require('../app/emit-events')
+const errCodes   = require('err-codes')
 
 
 
@@ -54,13 +55,9 @@ gitEvents.preprocess = rawArgs => {
 
 		} catch (err) {
 
-			var message = ''
-
-			if (err.code === constants.errCodes.notFound) {
-				message = 'folder not found.'
-			} else {
-				message = err.message
-			}
+			var message = errCodes.codes.hasOwnProperty(err.code)
+				? errCodes.codes[err.code].message
+				: err.message
 
 			console.error(`error: failed to validate '--directory' argument ${rawArgs['--directory']}: ${message}`)
 			process.exit(1)

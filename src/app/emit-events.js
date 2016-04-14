@@ -37,21 +37,21 @@ const createEmitterScript = (directory, hook) => {
 
 const emitEvents = directory => {
 
-	const hooksDirectory    = path.join(directory, '.git', 'hooks')
-	const createDirectories = constants.hooks.map(hook => {
+	const hooksDirectory = path.join(directory, '.git', 'hooks')
+	const createEmitters = constants.hooks.map(hook => {
 
-		const hookScript = path.join(hooksDirectory, `${hook}.sh`)
+		const hookScriptPath = path.join(hooksDirectory, `${hook}.sh`)
+		const script     = createEmitterScript(hooksDirectory, hook)
 
 		return new Promise((resolve, reject) => {
-			utils.fs.createFile(hookScript, createEmitterScript(hooksDirectory, hook), {mode: constants.modes.defaultWithExecutable}, err => {
+			utils.fs.createFile(hookScriptPath, script, {mode: constants.modes.defaultWithExecutable}, err => {
 				err ? reject(err) : resolve( )
 			})
 		})
 
 	})
 
-
-	Promise.all(createDirectories).then(
+	Promise.all(createEmitters).then(
 		( ) => {
 			console.log('done')
 		},

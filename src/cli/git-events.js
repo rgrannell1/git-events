@@ -16,8 +16,10 @@ const docs = `
 Name:
 	git-events -
 
+Description:
+
 Usage:
-	git-events [-d <PATH> | --directory <PATH>]
+	git-events (-d <PATH> | --directory <PATH>)
 	git-events (-h | --help | --version)
 
 Options:
