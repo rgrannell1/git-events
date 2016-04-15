@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "git-events": "src/cli/git-events.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rgrannell1/git-events.git"
@@ -18,6 +21,7 @@
   "homepage": "https://github.com/rgrannell1/git-events#readme",
   "dependencies": {
     "docopt": "^0.6.2",
-    "err-codes": "github:rgrannell1/err-codes"
+    "err-codes": "github:rgrannell1/err-codes",
+    "is": "github:rgrannell1/is"
   }
 }

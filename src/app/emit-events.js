@@ -5,6 +5,7 @@
 
 
 const path      = require('path')
+const is        = require('is')
 const fs        = require('fs')
 
 const constants = require('../commons/constants')
@@ -15,6 +16,8 @@ const utils     = require('../commons/utils')
 
 
 const createEmitterScript = (directory, hook) => {
+
+	createEmitterScript.precond(directory, hook)
 
 	const pipePath = path.join(directory, constants.files.pipeName)
 
@@ -31,21 +34,32 @@ const createEmitterScript = (directory, hook) => {
 
 }
 
+createEmitterScript.precond = (directory, hook) => {
+
+	is.always.string(directory)
+	is.always.string(hook)
+
+}
+
 
 
 
 
 const emitEvents = directory => {
 
-	const hooksDirectory = path.join(directory, '.git', 'hooks')
+	emitEvents.precond(directory)
+
+	const hooksDirectory = path.join(path.resolve(directory), '.git', 'hooks')
 	const createEmitters = constants.hooks.map(hook => {
 
 		const hookScriptPath = path.join(hooksDirectory, `${hook}.sh`)
-		const script     = createEmitterScript(hooksDirectory, hook)
+		const script         = createEmitterScript(hooksDirectory, hook)
 
 		return new Promise((resolve, reject) => {
-			utils.fs.createFile(hookScriptPath, script, {mode: constants.modes.defaultWithExecutable}, err => {
+
+			fs.writeFile(hookScriptPath, script, {mode: constants.modes.hook}, err => {
 				err ? reject(err) : resolve( )
+
 			})
 		})
 
@@ -53,14 +67,18 @@ const emitEvents = directory => {
 
 	Promise.all(createEmitters).then(
 		( ) => {
-			console.log('done')
+			console.log(`Initialised git-events scripts in ${hooksDirectory}`)
 		},
 		err => {
-			console.log(err)
+			console.log(`Failed to initialise git-events scripts: ${err.message}`)
 			process.exit(1)
 		}
 	)
 
+}
+
+emitEvents.precond = directory => {
+	is.always.string(directory)
 }
 
 

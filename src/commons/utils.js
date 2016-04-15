@@ -2,6 +2,7 @@
 "use strict"
 
 
+const is       = require('is')
 const fs       = require('fs')
 const errCodes = require('err-codes')
 
@@ -22,8 +23,9 @@ const utils = {
 
 utils.fs.mkdirp = (path, callback) => {
 
-	fs.mkdir(path, err => {
+	utils.fs.mkdirp.precond(path, callback)
 
+	fs.mkdir(path, err => {
 
 		err.code !== errCodes.aliases.fileExists.code
 			? callback(err)
@@ -33,12 +35,9 @@ utils.fs.mkdirp = (path, callback) => {
 
 }
 
-utils.fs.createFile = (path, content, options, callback) => {
-
-	fs.writeFile(path, content, options, err => {
-		callback(err)
-	})
-
+utils.fs.mkdirp.precond = (path, callback) => {
+	is.always.string(path)
+	is.always.function(callback)
 }
 
 

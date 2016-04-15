@@ -18,7 +18,7 @@ const errCodes   = require('err-codes')
 
 const gitEvents = rawArgs => {
 
-	const args = gitEvents.validate(gitEvents.preprocess(rawArgs))
+	const args = gitEvents.preprocess(rawArgs)
 
 	if (args.version) {
 
@@ -31,41 +31,45 @@ const gitEvents = rawArgs => {
 
 }
 
-gitEvents.validate = args => {
-	return args
-}
-
 gitEvents.preprocess = rawArgs => {
 
 	const args = {
-		version: rawArgs['--version']
-	}
-
-	if (rawArgs['--directory']) {
-		try {
-
-			const directory = path.resolve(rawArgs['--directory'])
-			const stats     = fs.lstatSync(directory)
-
-			if (!stats.isDirectory( )) {
-				throw Error('not a directory.')
-			}
-
-			args.directory  = directory
-
-		} catch (err) {
-
-			var message = errCodes.codes.hasOwnProperty(err.code)
-				? errCodes.codes[err.code].message
-				: err.message
-
-			console.error(`error: failed to validate '--directory' argument ${rawArgs['--directory']}: ${message}`)
-			process.exit(1)
-
-		}
+		version:   rawArgs['--version'],
+		directory: rawArgs['--directory']
 	}
 
 	return args
+
+}
+
+gitEvents.preprocess.directory = directory => {
+
+	try {
+
+		if (!is.string(directory)) {
+			throw Error('internal error: --directory was not a string.')
+		}
+
+		const directory = path.resolve(rawArgs['--directory'])
+		const stats     = fs.lstatSync(directory)
+
+		if (!stats.isDirectory( )) {
+			throw Error('not a directory.')
+		}
+
+		args.directory  = directory
+
+	} catch (err) {
+
+		var message = errCodes.codes.hasOwnProperty(err.code)
+			? errCodes.codes[err.code].message
+			: err.message
+
+		console.error(`error: failed to preprocess '--directory' argument ${rawArgs['--directory']}: ${message}`)
+
+		process.exit(1)
+
+	}
 
 }
 

@@ -33,7 +33,7 @@ var constants = {
 	},
 	packageJson: require('../../package'),
 	modes: {
-		defaultWithExecutable: '775'
+		hook: '775'
 	}
 }
 
