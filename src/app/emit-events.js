@@ -52,7 +52,7 @@ const emitEvents = directory => {
 	const hooksDirectory = path.join(path.resolve(directory), '.git', 'hooks')
 	const createEmitters = constants.hooks.map(hook => {
 
-		const hookScriptPath = path.join(hooksDirectory, `${hook}.sh`)
+		const hookScriptPath = path.join(hooksDirectory, `${hook}`)
 		const script         = createEmitterScript(hooksDirectory, hook)
 
 		return new Promise((resolve, reject) => {
