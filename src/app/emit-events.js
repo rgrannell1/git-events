@@ -27,7 +27,7 @@ const createEmitterScript = (directory, hook) => {
 		'',
 		`touch "${ eventFile }"`,
 		'',
-		`echo "${ hook } $@" > "${ eventFile }"`,
+		`echo "${ hook } $@" >> "${ eventFile }"`,
 		'exit 0'
 
 	].join('\n')
