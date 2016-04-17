@@ -25,7 +25,7 @@ var constants = {
 
 	],
 	files: {
-		pipeName: 'git-events'
+		defaultPipeName: 'git-events'
 	},
 	errCodes: {
 		notFound:      'ENOENT',

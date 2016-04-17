@@ -15,22 +15,37 @@ const utils     = require('../commons/utils')
 
 
 
-const createEmitterScript = (directory, hook) => {
+const createEmitterScript = (directory, eventFile, useJson, hook) => {
 
 	createEmitterScript.precond(directory, hook)
 
-	const eventFile = path.join(directory, constants.files.pipeName)
+	if (useJson) {
 
-	return [
+		return [
 
-		'#!/usr/bin/env sh',
-		'',
-		`touch "${ eventFile }"`,
-		'',
-		`echo "${ hook } $@" >> "${ eventFile }"`,
-		'exit 0'
+			'#!/usr/bin/env node',
+			'',
+			'var fs   = require("fs")',
+			`var args = ["${hook}"].concat(process.argv.slice(2))`,
+			'',
+			`fs.appendFile("${eventFile}", JSON.stringify(args) + "\\n", err => { })`
 
-	].join('\n')
+		].join('\n')
+
+	} else {
+
+		return [
+
+			'#!/usr/bin/env sh',
+			'',
+			`touch "${ eventFile }"`,
+			'',
+			`echo "${ hook } $@" >> "${ eventFile }"`,
+			'exit 0'
+
+		].join('\n')
+
+	}
 
 }
 
@@ -45,15 +60,19 @@ createEmitterScript.precond = (directory, hook) => {
 
 
 
-const emitEvents = directory => {
+const emitEvents = (directory, eventFile, useJson) => {
 
 	emitEvents.precond(directory)
 
 	const hooksDirectory = path.join(path.resolve(directory), '.git', 'hooks')
+	const eventOutFile      = eventFile
+		? eventFile
+		: path.join(hooksDirectory, constants.files.defaultPipeName)
+
 	const createEmitters = constants.hooks.map(hook => {
 
 		const hookScriptPath = path.join(hooksDirectory, `${hook}`)
-		const script         = createEmitterScript(hooksDirectory, hook)
+		const script         = createEmitterScript(hooksDirectory, eventOutFile, useJson, hook)
 
 		return new Promise((resolve, reject) => {
 

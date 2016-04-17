@@ -1,7 +1,15 @@
 # git-events
 
-Git-events is a cross-language, unix-friendly method for managing git hooks.
+git-events wraps git-hooks in a serverless, unix-friendly publish-subscript interface. Typically, to add git hooks
+to a repository you:
 
+* create a separate script for handling each git hook.
+* copy these into that repositories git hook folder.
+
+with git-events you:
+
+* call this command on your repo, and optionally say where to create an events file.
+* read from this file using any programming language, and perform an action for particular hooks
 
 ## License
 

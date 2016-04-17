@@ -5,6 +5,7 @@
 
 
 
+const is         = require('is')
 const fs         = require('fs')
 const path       = require('path')
 
@@ -27,7 +28,7 @@ const gitEvents = rawArgs => {
 
 	}
 
-	emitEvents(args.directory)
+	emitEvents(args.directory, args.pipeFile, args.useJson)
 
 }
 
@@ -35,7 +36,8 @@ gitEvents.preprocess = rawArgs => {
 
 	const args = {
 		version:   rawArgs['--version'],
-		directory: rawArgs['--directory']
+		directory: gitEvents.preprocess.directory(rawArgs['--directory']),
+		useJson:   rawArgs['--json']
 	}
 
 	return args
@@ -50,14 +52,14 @@ gitEvents.preprocess.directory = directory => {
 			throw Error('internal error: --directory was not a string.')
 		}
 
-		const directory = path.resolve(rawArgs['--directory'])
-		const stats     = fs.lstatSync(directory)
+		const resolvedDirectory = path.resolve(directory)
+		const stats             = fs.lstatSync(directory)
 
 		if (!stats.isDirectory( )) {
 			throw Error('not a directory.')
 		}
 
-		args.directory  = directory
+		return resolvedDirectory
 
 	} catch (err) {
 
@@ -65,8 +67,7 @@ gitEvents.preprocess.directory = directory => {
 			? errCodes.codes[err.code].message
 			: err.message
 
-		console.error(`error: failed to preprocess '--directory' argument ${rawArgs['--directory']}: ${message}`)
-
+		console.error(`error: failed to preprocess '--directory' argument ${directory}: ${message}`)
 		process.exit(1)
 
 	}
