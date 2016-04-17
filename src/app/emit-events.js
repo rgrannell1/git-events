@@ -19,15 +19,15 @@ const createEmitterScript = (directory, hook) => {
 
 	createEmitterScript.precond(directory, hook)
 
-	const pipePath = path.join(directory, constants.files.pipeName)
+	const eventFile = path.join(directory, constants.files.pipeName)
 
 	return [
 
 		'#!/usr/bin/env sh',
 		'',
-		`[ -p "${ pipePath }" ] || mkfifo "${ pipePath }"`,
+		`touch "${ eventFile }"`,
 		'',
-		`echo "${ hook }" > ${ pipePath }`,
+		`echo "${ hook } $@" > "${ eventFile }"`,
 		'exit 0'
 
 	].join('\n')

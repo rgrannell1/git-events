@@ -26,6 +26,9 @@ Options:
 	-d <PATH>, --directory <PATH>    The path to monitor.
 	-h, --help                       Display this documentation.
 	--version                        Display the program's documentation.
+
+Version:
+	v${constants.packageJson.version}
 `
 
 
